@@ -224,9 +224,12 @@ jobs:
     - name: Install Python 2
       if: ${{ steps.buildtree.outputs.value == 'omni' }}
       run: |
-        sudo apt -y install python2
-        cd /usr/bin
-        sudo ln -sf python2 python
+        sudo apt -y update
+        sudo apt -y install python2-minimal || sudo apt -y install python2.7-minimal
+        if [ ! -x /usr/bin/python2 ] && [ -x /usr/bin/python2.7 ]; then
+          sudo ln -sf /usr/bin/python2.7 /usr/bin/python2
+        fi
+        sudo ln -sf /usr/bin/python2 /usr/bin/python
 
     - name: Building recovery (AOSP)
       if: ${{ steps.buildtree.outputs.value == 'aosp' }} 
