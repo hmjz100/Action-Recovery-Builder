@@ -99,11 +99,11 @@ jobs:
           if_true: aosp
           if_false: omni
 
-      - name: Setup Python 2.7
+      - name: Setup Python
         if: ${{ steps.buildtree.outputs.value == 'omni' }}
         uses: actions/setup-python@v6
         with:
-          python-version: "2.7"
+          python-version: "3.0.1"
 
       - name: Install OpenJDK
         if: steps.buildtree.outputs.value == 'omni'
