@@ -221,14 +221,23 @@ jobs:
       id: recoveryinstaller
       continue-on-error: true
 
-    - name: Install Python 2.7
+    - name: Install Python 2
       if: ${{ steps.buildtree.outputs.value == 'omni' }}
       run: |
-        sudo add-apt-repository ppa:deadsnakes/ppa -y
-        sudo apt update
-        sudo apt install -y python2.7
-        sudo ln -sf /usr/bin/python2.7 /usr/bin/python
+        sudo apt update && sudo apt upgrade
+        sudo apt install -y build-essential checkinstall libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev
+        wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+        tar -xvf Python-2.7.18.tgz
+        cd Python-2.7.18
+        ./configure --enable-optimizations
+        make
+        sudo make install
+        sudo update-alternatives --install /usr/bin/python python /usr/local/lib/python2.7 1
         python --version
+        sudo apt install curl
+        curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+        sudo python2.7 get-pip.py
+        pip2.7 --version
 
 
     - name: Building recovery (AOSP)
